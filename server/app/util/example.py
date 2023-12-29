@@ -1,4 +1,5 @@
 from neqsim.thermo import *
+
 nitrogen = 1.0 #@param {type:"number"}
 CO2 = 2.5 #@param {type:"number"}
 methane = 80.0  #@param {type:"number"}
@@ -22,7 +23,7 @@ fluid1.addComponent("i-butane", ibutane)
 fluid1.addComponent("n-pentane", nbutane)
 fluid1.addComponent("n-pentane", nbutane)
 fluid1.addComponent("n-hexane", nbutane)
-fluid1.setMixingRule('classic');
+fluid1.setMixingRule('classic')
 
 thermoOps = jNeqSim.thermodynamicOperations.ThermodynamicOperations(fluid1)
 thermoOps.calcPTphaseEnvelope()

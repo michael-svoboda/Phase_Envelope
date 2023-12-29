@@ -1,5 +1,5 @@
-// App.js
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import MainPage from './pages/MainPage';
 
@@ -13,13 +13,12 @@ const App = () => {
   };
 
   return (
-    <div>
-      {loggedIn ? (
-        <MainPage username={username} />
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={loggedIn ? <MainPage username={username} /> : <Login onLogin={handleLogin} />} />
+        {/* Add more routes if needed */}
+      </Routes>
+    </Router>
   );
 };
 
