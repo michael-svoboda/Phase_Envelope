@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Chart from 'chart.js/auto';
 
-const DarkModeRadarChart = ({ chemicalComposition }) => {
+const DarkModeRadarChart = ({ chemicalComposition, phaseFractions }) => {
   const chartRef = useRef(null);
   const chartInstanceRef = useRef(null);
   const [chartData, setChartData] = useState(null);
@@ -9,16 +9,67 @@ const DarkModeRadarChart = ({ chemicalComposition }) => {
   useEffect(() => {
     if (chartRef && chartRef.current && chemicalComposition) {
       const ctx = chartRef.current.getContext('2d');
+      console.log(phaseFractions)
 
       const labels = Object.keys(chemicalComposition);
+      const dataValues = Object.values(chemicalComposition);
 
-      const datasets = [
+      const labels2 = Object.keys(phaseFractions.data);
+      const dataValues2 = Object.values(phaseFractions);
+      console.log('LABELS')
+      console.log(labels2)
+
+      const liquidFractions = [];
+      const vaporFractions = [];
+
+      for (const label of labels2) {
+        console.log(typeof(phaseFractions.data[label]['l']))
+        const mols = phaseFractions.data[label]['v'] + phaseFractions.data[label]['l']
+        liquidFractions.push(phaseFractions.data[label]['l']/mols);
+        vaporFractions.push(phaseFractions.data[label]['v']/mols);
+      }
+      console.log('DATAVALUES')
+      console.log(dataValues)
+
+      console.log('LIQUIDFRACS')
+      console.log(liquidFractions)
+
+      console.log('VAPOR FRACS')
+      console.log(vaporFractions)
+
+      const datasets2 = [
         {
-          label: 'Chemical Composition',
+          label: 'Liquid Fractions',
           backgroundColor: 'rgba(255, 99, 132, 0.2)',
           borderColor: 'rgb(255, 99, 132)',
           pointBackgroundColor: 'rgb(255, 99, 132)',
-          data: labels.map((label) => chemicalComposition[label]),
+          data: liquidFractions,
+        },
+        {
+          label: 'Vapor Fractions',
+          backgroundColor: 'rgba(132, 99, 255, 0.2)',
+          borderColor: 'rgb(132, 99, 255)',
+          pointBackgroundColor: 'rgb(132, 99, 255)',
+          data: vaporFractions,
+        },
+      ];
+
+
+
+      const datasets = [
+        { 
+          label: 'Vapor Fractions',
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgb(255, 99, 132)',
+          pointBackgroundColor: 'rgb(255, 99, 132)',
+          data: vaporFractions,
+        },
+        {
+          label: 'Liquid Fractions',
+          backgroundColor: 'rgba(54, 162, 235, 0.2)', // React default blue theme
+          borderColor: 'rgb(54, 162, 235)',
+          pointBackgroundColor: 'rgb(54, 162, 235)',
+          data: liquidFractions,
         },
       ];
 
@@ -42,7 +93,7 @@ const DarkModeRadarChart = ({ chemicalComposition }) => {
           scales: {
             r: {
               min: 0,
-              max: 100,
+              max: 1,
               angleLines: {
                 color: 'white',
                 display: true,
@@ -51,9 +102,9 @@ const DarkModeRadarChart = ({ chemicalComposition }) => {
               },
               grid: {
                 color: 'rgba(255, 255, 255, 0.2)',
-                stepSize: 10, // Optionally set the step size
+                stepSize: 0.1, // Optionally set the step size
                 min: 0,
-                max: 100,
+                max: 1,
                 display: true,
                 circular: true,
               },
@@ -90,7 +141,7 @@ const DarkModeRadarChart = ({ chemicalComposition }) => {
         chartInstanceRef.current.destroy();
       }
     };
-  }, [chemicalComposition]);
+  }, [phaseFractions, chemicalComposition]);
 
   return <canvas ref={chartRef} />;
 };

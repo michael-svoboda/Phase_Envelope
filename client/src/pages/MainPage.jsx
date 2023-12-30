@@ -13,15 +13,27 @@ import React, { useState, useEffect } from 'react';
 const MainPage = ({ username }) => {
 
   const [chemicalComposition, setChemicalComposition] = useState({});
+  const [selectedPT, setSelectedPT] = useState({});
   const [phaseEnvelope, setPhaseEnvelope] = useState({
     // Other state variables...
     data: {}, // Initializing phaseEnvelope as an empty object
   });
+  const [phaseFractions, setPhaseFractions] = useState({
+    // Other state variables...
+    data: {}, // Initializing phaseEnvelope as an empty object
+  });
+  const [stateDictionary, setStateDictionary] = useState({});
+  
 
   // Event listener to log changes in chemicalComposition state
   useEffect(() => {
     console.log('Chemical Composition Updated:', chemicalComposition);
   }, [chemicalComposition]);
+
+  // UseEffect to call handlePhaseFractions whenever chemicalComposition changes
+  useEffect(() => {
+    handlePhaseFractions();
+  }, [selectedPT]);
 
   useEffect(() => {
     handleSendComposition(); // Call this function whenever chemicalComposition changes
@@ -85,6 +97,57 @@ const MainPage = ({ username }) => {
         setPhaseEnvelope({ data: {} });
       });
   };
+
+  const handlePhaseFractions = () => {
+    const endpointURL = 'http://localhost:5000/api/sendFractions';
+    const requestBody = {
+      composition: chemicalComposition,
+      selectedPT: selectedPT,
+    };
+  
+    fetch(endpointURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Log the response from the backend
+        console.log('Response from backend:', data);
+  
+        // Check if the 'result' field exists in the response and log it
+        if (data && data.result) {
+          console.log('Result from backend:', data.result);
+  
+          // Set the 'phaseEnvelope' state variable to the 'result' data
+          setPhaseFractions({ ...phaseFractions, data: data.result });
+        } else {
+          console.log('No result found in the response');
+        }
+      })
+      .catch((error) => {
+        console.error('There was a problem with the fetch operation:', error);
+        setPhaseFractions({ data: {} });
+      });
+  };
+
+  
+
+  
+
+  // Function to handle submitting chemical composition
+  const handleCompositionSubmit = () => {
+    // Replace this with the actual chemical composition data
+    const chemicalComposition = { /* Your chemical composition object */ };
+    handlePhaseFractions(chemicalComposition); // Call the function to send composition
+  };
   
   
 
@@ -112,7 +175,7 @@ const MainPage = ({ username }) => {
           <Grid item container height="59%">
             {/* Bottom Box Content */}
             <Grid item xs={12} style={{ paddingBottom: '6%' }}>
-              <DarkModeRadarChart chemicalComposition={chemicalComposition}/>
+              <DarkModeRadarChart chemicalComposition ={chemicalComposition} phaseFractions = {phaseFractions} />
             </Grid>
           </Grid>
         </Grid>
@@ -120,12 +183,11 @@ const MainPage = ({ username }) => {
         {/* Right Section */}
         <Grid item xs={6.5}>
         <Grid container p={2} height="50%"  >
-          <LineChart phaseEnvelope={phaseEnvelope} chemicalComposition ={chemicalComposition}/>
+          <LineChart stateDictionary = {stateDictionary} phaseEnvelope={phaseEnvelope} chemicalComposition ={chemicalComposition}/>
 
         </Grid>
         <Grid item container height="50%" p={1} >
-          <StateControl/>
-
+          <StateControl setSelectedPT = {setSelectedPT} stateDictionary = {stateDictionary} setStateDictionary = {setStateDictionary}/>
         </Grid>
         </Grid>
       </Grid>

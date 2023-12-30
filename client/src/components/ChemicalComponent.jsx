@@ -101,7 +101,6 @@ const ChemicalComponent = ({ onAddToComposition, setChemicalComposition}) => {
                 <MenuItem value="n-butane">n-C4H10</MenuItem>
                 <MenuItem value="i-pentane">i-C5H12</MenuItem>
                 <MenuItem value="n-pentane">n-C5H12</MenuItem>
-                <MenuItem value="i-hexane">i-C6H14</MenuItem>
                 <MenuItem value="n-hexane">n-C6H14</MenuItem>
               </Select>
             </FormControl>

@@ -5,17 +5,19 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { ReactSortable } from 'react-sortablejs';
 
-const StateControl = () => {
+const StateControl = ({ setSelectedPT, stateDictionary, setStateDictionary }) => {
   const [stateName, setStateName] = useState('');
   const [temperature, setTemperature] = useState('');
   const [pressure, setPressure] = useState('');
   const [buttons, setButtons] = useState([]);
   const [selectedButton, setSelectedButton] = useState(null); // State to store the selected button ID
-
+  
 
   const handleAddButton = () => {
     const newButtonName = `${stateName} | P: ${pressure} (kPa) T: ${temperature} (C)`;
-    setButtons([...buttons, { id: buttons.length + 1, name: newButtonName }]);
+    const newState = { id: buttons.length + 1, name: newButtonName, temperature, pressure };
+    setButtons([...buttons, newState]);
+    setStateDictionary({ ...stateDictionary, [newState.id]: { temperature, pressure } });
     // Clear input fields after adding the button
     setStateName('');
     setTemperature('');
@@ -23,13 +25,18 @@ const StateControl = () => {
   };
 
   const handleRemoveButton = () => {
+    const updatedDictionary = { ...stateDictionary };
+    delete updatedDictionary[selectedButton];
+    setStateDictionary(updatedDictionary);
     setButtons(buttons.filter((button) => button.id !== selectedButton));
+    setSelectedButton(null);
   };
 
   const handleButtonClick = (buttonId) => {
     setSelectedButton(buttonId === selectedButton ? null : buttonId);
+    setSelectedPT(stateDictionary[buttonId]); // Notify MainPage about the change
+    console.log(stateDictionary[buttonId])
   };
-
 
   const buttonStyle = {
     border: '1.5px solid rgba(255, 255, 255, 0.2)',

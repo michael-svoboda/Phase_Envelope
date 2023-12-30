@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 
-const CustomScatterChart = ({ phaseEnvelope, chemicalComposition }) => {
+const CustomScatterChart = ({ stateDictionary, phaseEnvelope, chemicalComposition }) => {
   const chartRef = useRef(null);
   const chartInstance = useRef(null);
 
@@ -15,7 +15,30 @@ const CustomScatterChart = ({ phaseEnvelope, chemicalComposition }) => {
     }
   };
 
+
   useEffect(() => {
+    console.log(stateDictionary);
+
+    const state_list = []
+
+    console.log('LOOP START:')
+    const keys = Object.keys(stateDictionary);
+    console.log(keys)
+
+    for (let i = 0; i < keys.length; i++) {
+      const state = stateDictionary[keys[i]];
+      console.log('LOOP');
+      console.log(parseFloat(state['temperature']));
+      state_list.push({ x: parseFloat(state['temperature']) + 273.15, y: parseFloat(state['pressure']) });
+    }
+    
+    console.log('LINE DATA:');
+    console.log(state_list);
+
+    
+
+    
+    
     if (phaseEnvelope && chemicalComposition) {
       const bubT = phaseEnvelope.data.bubT || [];
       const dewT = phaseEnvelope.data.dewT || [];
@@ -46,8 +69,21 @@ const CustomScatterChart = ({ phaseEnvelope, chemicalComposition }) => {
             showLine: true,
             tension: 0.4
           },
+          {
+            label: 'States',
+            data: state_list,
+            borderColor: 'rgba(255, 159, 64, 1)', // Chart.js yellow
+            backgroundColor: 'rgba(255, 225, 86, 1)',
+            pointRadius: 6,
+            pointHoverRadius: 10,
+            hoverRadius: 20,
+            showLine: true,
+            tension: 0
+          },
         ],
       };
+
+
 
       if (chartRef.current) {
         if (!chartInstance.current) {
@@ -91,7 +127,7 @@ const CustomScatterChart = ({ phaseEnvelope, chemicalComposition }) => {
         }
       }
     }
-  }, [phaseEnvelope]);
+  }, [phaseEnvelope, stateDictionary]);
 
   return <canvas ref={chartRef} width="400" height="200" />;
 };
