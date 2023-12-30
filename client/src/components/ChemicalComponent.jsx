@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const ChemicalComponent = ({ onAddToComposition, setChemicalComposition}) => {
+const ChemicalComponent = ({setPhaseFractions, onAddToComposition, setChemicalComposition}) => {
   const classes = useStyles();
   const [molarAmount, setMolarAmount] = useState(0);
   const [chemicalComponent, setChemicalComponent] = useState('');
@@ -46,6 +46,7 @@ const ChemicalComponent = ({ onAddToComposition, setChemicalComposition}) => {
 
   const handleClearComposition = () => {
     setChemicalComposition({}); // Clears the composition
+    setPhaseFractions({data: {}});
     console.log('Composition cleared');
   };
 
@@ -102,6 +103,9 @@ const ChemicalComponent = ({ onAddToComposition, setChemicalComposition}) => {
                 <MenuItem value="i-pentane">i-C5H12</MenuItem>
                 <MenuItem value="n-pentane">n-C5H12</MenuItem>
                 <MenuItem value="n-hexane">n-C6H14</MenuItem>
+                <MenuItem value="n-heptane">n-C7H16</MenuItem>
+                <MenuItem value="n-octane">n-C8H18</MenuItem>
+                <MenuItem value="n-nonane">n-C9H20</MenuItem>
               </Select>
             </FormControl>
             

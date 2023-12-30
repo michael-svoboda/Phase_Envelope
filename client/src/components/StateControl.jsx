@@ -14,7 +14,7 @@ const StateControl = ({ setSelectedPT, stateDictionary, setStateDictionary }) =>
   
 
   const handleAddButton = () => {
-    const newButtonName = `${stateName} | P: ${pressure} (kPa) T: ${temperature} (C)`;
+    const newButtonName = `${stateName} | P: ${pressure} (bar) T: ${temperature} (C) `;
     const newState = { id: buttons.length + 1, name: newButtonName, temperature, pressure };
     setButtons([...buttons, newState]);
     setStateDictionary({ ...stateDictionary, [newState.id]: { temperature, pressure } });
@@ -96,7 +96,7 @@ const StateControl = ({ setSelectedPT, stateDictionary, setStateDictionary }) =>
               </Grid>
               <Grid item xs={3}>
                 <TextField
-                  label="Pressure (kPa)"
+                  label="Pressure (bar)"
                   value={pressure}
                   onChange={(e) => setPressure(e.target.value)}
                   fullWidth

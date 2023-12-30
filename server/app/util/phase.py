@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def calculate_phase_envelope(composition):
     # Create a fluid using neqsim
-    fluid1 = fluid('srk')
+    fluid1 = fluid('pr')
 
     # Add components based on the given composition dictionary
     data = composition['composition']

@@ -168,7 +168,7 @@ const MainPage = ({ username }) => {
             {/* ChemicalComponent */}
             <Grid item xs={6.5} p={2} style={{ marginTop: '6%' }}>
               {/* ChemicalComponent Content */}
-              <ChemicalComponent onAddToComposition={handleChemicalComposition} setChemicalComposition={setChemicalComposition}/>
+              <ChemicalComponent setPhaseFractions = {setPhaseFractions} onAddToComposition={handleChemicalComposition} setChemicalComposition={setChemicalComposition}/>
             </Grid>
           </Grid>
           {/* Bottom Section */}

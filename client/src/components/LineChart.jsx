@@ -29,7 +29,7 @@ const CustomScatterChart = ({ stateDictionary, phaseEnvelope, chemicalCompositio
       const state = stateDictionary[keys[i]];
       console.log('LOOP');
       console.log(parseFloat(state['temperature']));
-      state_list.push({ x: parseFloat(state['temperature']) + 273.15, y: parseFloat(state['pressure']) });
+      state_list.push({ x: parseFloat(state['temperature']), y: parseFloat(state['pressure']) });
     }
     
     console.log('LINE DATA:');
@@ -45,11 +45,24 @@ const CustomScatterChart = ({ stateDictionary, phaseEnvelope, chemicalCompositio
       const bubP = phaseEnvelope.data.bubP || [];
       const dewP = phaseEnvelope.data.dewP || [];
 
+      // Function to convert Kelvin to Celsius
+      function kelvinToCelsius(kelvin) {
+        return kelvin - 273.15;
+      }
+
+      // Convert temperatures in bubT array
+      const bubTC = bubT.map(kelvinToCelsius);
+
+      // Convert temperatures in dewT array
+      const dewTC = dewT.map(kelvinToCelsius);
+
+
+
       const scatterChartData = {
         datasets: [
           {
             label: 'Bubble Point',
-            data: bubT.map((bubT, index) => ({ x: bubT, y: bubP[index] })),
+            data: bubTC.map((bubTC, index) => ({ x: bubTC, y: bubP[index] })),
             borderColor: 'rgba(255, 99, 132, 1)',
             backgroundColor: 'rgba(255, 99, 132, 1)',
             pointHoverRadius: 10,
@@ -60,7 +73,7 @@ const CustomScatterChart = ({ stateDictionary, phaseEnvelope, chemicalCompositio
           },
           {
             label: 'Dew Point',
-            data: dewT.map((dewT, index) => ({ x: dewT, y: dewP[index] })),
+            data: dewTC.map((dewTC, index) => ({ x: dewTC, y: dewP[index] })),
             borderColor: 'rgba(54, 162, 235, 1)',
             backgroundColor: 'rgba(54, 162, 235, 1)',
             pointRadius: 1,
@@ -98,7 +111,7 @@ const CustomScatterChart = ({ stateDictionary, phaseEnvelope, chemicalCompositio
                   position: 'bottom',
                   title: {
                     display: true,
-                    text: 'Temperature [K]',
+                    text: 'Temperature [C]',
                     align: 'end',
                   },
                 },
