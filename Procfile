@@ -1,2 +1,1 @@
-web: gunicorn -w 4 -b 0.0.0.0:$PORT server.start:app
-
+web: npm --prefix client start
