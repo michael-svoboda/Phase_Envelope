@@ -1,1 +1,1 @@
-web: npm start --prefix client && python server/start.py
+web: cd client && npm start && cd .. && python server/start.py
