@@ -15,7 +15,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/sortablejs": "^1.15.7",
-    "c3": "^0.7.20",
+    "c3": "^0.4.24",
     "canvasjs-react-charts": "^1.0.5",
     "chart.js": "^4.4.1",
     "font-awesome": "^4.7.0",
