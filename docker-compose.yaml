@@ -1,0 +1,25 @@
+version: "3.1"
+
+services:
+  backend:
+    restart: always
+    container_name: backend
+    command: bash -c "python /server/start.py 0.0.0.0:5000"
+    build: 
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+
+  frontend:
+    restart: always
+    command: npm start
+    container_name: frontend
+    build: 
+      context: ./client
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
