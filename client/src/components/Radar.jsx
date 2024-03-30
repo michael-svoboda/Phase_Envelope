@@ -1,27 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Plot from 'react-plotly.js';
 
-const RadarChart = () => {
-  const data = [
-    {
+const RadarChart = ({ ChemicalComposition }) => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    updateChartData();
+  }, [ChemicalComposition]);
+
+  const updateChartData = () => {
+    const chartData = Object.keys(ChemicalComposition).map((key) => ({
       type: 'scatterpolar',
-      r: [1, 2, 3, 4, 5, 1],
+      r: Array.from({ length: 6 }, () => Math.floor(Math.random() * 5) + 1),
       theta: ['A', 'B', 'C', 'D', 'E', 'A'],
       fill: 'toself',
       showlegend: false,
       opacity: 1,
-      marker: {color: '#36A2EB' }
-    },
-    {
-      type: 'scatterpolar',
-      r: [3, 2, 5, 1, 4, 3],
-      theta: ['A', 'B', 'C', 'D', 'E', 'A'],
-      fill: 'toself',
-      showlegend: false,
-      opacity: 1,
-      marker: {color: '#FF6384'}
-    },
-  ];
+      marker: { color: getRandomColor() },
+    }));
+    setData(chartData);
+  };
+
+  const getRandomColor = () => {
+    // Implement your logic to generate random colors here
+    // Example: return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+    return '#000000';
+  };
 
   const layout = {
     polar: {
@@ -43,21 +47,19 @@ const RadarChart = () => {
     height: 350,
     margin: { t: 10, b: 20, l: 10, r: 10 }, // Adjust margins for padding
     yaxis: {
-        automargin: true
-      },
-      xaxis: {
-        automargin: true
-      }
+      automargin: true,
+    },
+    xaxis: {
+      automargin: true,
+    },
   };
 
   return (
-
-      <Plot
-        data={data}
-        layout={layout}
-        config={{ responsive: true }}
-      />
-
+    <Plot
+      data={data}
+      layout={layout}
+      config={{ responsive: true }}
+    />
   );
 };
 
