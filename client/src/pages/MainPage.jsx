@@ -7,24 +7,21 @@ import StateControl from '../components/StateControl';
 import { Container, Row, Col } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 
-
-
+// Import the mock functions
+import { mockSendComposition, mockSendFractions } from '../util/mockapi';
 
 const MainPage = ({ username }) => {
 
   const [chemicalComposition, setChemicalComposition] = useState({});
   const [selectedPT, setSelectedPT] = useState({});
   const [phaseEnvelope, setPhaseEnvelope] = useState({
-    // Other state variables...
     data: {}, // Initializing phaseEnvelope as an empty object
   });
   const [phaseFractions, setPhaseFractions] = useState({
-    // Other state variables...
     data: {}, // Initializing phaseEnvelope as an empty object
   });
   const [stateDictionary, setStateDictionary] = useState({});
   
-
   // Event listener to log changes in chemicalComposition state
   useEffect(() => {
     console.log('Chemical Composition Updated:', chemicalComposition);
@@ -57,9 +54,9 @@ const MainPage = ({ username }) => {
     }
   };
 
-  // Assume `composition` is the object containing the chemical composition data
-
   const handleSendComposition = () => {
+    /* 
+    // Old API call
     const endpointURL = 'http://localhost:5000/api/sendComposition';
     const requestBody = {
       composition: chemicalComposition,
@@ -79,14 +76,9 @@ const MainPage = ({ username }) => {
         return response.json();
       })
       .then((data) => {
-        // Log the response from the backend
         console.log('Response from backend:', data);
-  
-        // Check if the 'result' field exists in the response and log it
         if (data && data.result) {
           console.log('Result from backend:', data.result);
-  
-          // Set the 'phaseEnvelope' state variable to the 'result' data
           setPhaseEnvelope({ ...phaseEnvelope, data: data.result });
         } else {
           console.log('No result found in the response');
@@ -96,9 +88,27 @@ const MainPage = ({ username }) => {
         console.error('There was a problem with the fetch operation:', error);
         setPhaseEnvelope({ data: {} });
       });
+    */
+
+    // Use mock function
+    mockSendComposition({ composition: chemicalComposition })
+      .then((data) => {
+        console.log('Response from mock:', data);
+        if (data && data.result) {
+          setPhaseEnvelope({ ...phaseEnvelope, data: data.result });
+        } else {
+          console.log('No result found in the mock response');
+        }
+      })
+      .catch((error) => {
+        console.error('There was a problem with the mock operation:', error);
+        setPhaseEnvelope({ data: {} });
+      });
   };
 
   const handlePhaseFractions = () => {
+    /* 
+    // Old API call
     const endpointURL = 'http://localhost:5000/api/sendFractions';
     const requestBody = {
       composition: chemicalComposition,
@@ -119,14 +129,8 @@ const MainPage = ({ username }) => {
         return response.json();
       })
       .then((data) => {
-        // Log the response from the backend
         console.log('Response from backend:', data);
-  
-        // Check if the 'result' field exists in the response and log it
         if (data && data.result) {
-          console.log('Result from backend:', data.result);
-  
-          // Set the 'phaseEnvelope' state variable to the 'result' data
           setPhaseFractions({ ...phaseFractions, data: data.result });
         } else {
           console.log('No result found in the response');
@@ -136,22 +140,23 @@ const MainPage = ({ username }) => {
         console.error('There was a problem with the fetch operation:', error);
         setPhaseFractions({ data: {} });
       });
+    */
+
+    // Use mock function
+    mockSendFractions({ composition: chemicalComposition, selectedPT: selectedPT })
+      .then((data) => {
+        console.log('Response from mock:', data);
+        if (data && data.result) {
+          setPhaseFractions({ ...phaseFractions, data: data.result });
+        } else {
+          console.log('No result found in the mock response');
+        }
+      })
+      .catch((error) => {
+        console.error('There was a problem with the mock operation:', error);
+        setPhaseFractions({ data: {} });
+      });
   };
-
-  
-
-  
-
-  // Function to handle submitting chemical composition
-  const handleCompositionSubmit = () => {
-    // Replace this with the actual chemical composition data
-    const chemicalComposition = { /* Your chemical composition object */ };
-    handlePhaseFractions(chemicalComposition); // Call the function to send composition
-  };
-  
-  
-
-
 
   return (
     <div style={{ backgroundColor: 'black', height: '100vh', color: 'white' }}>
@@ -168,14 +173,14 @@ const MainPage = ({ username }) => {
             {/* ChemicalComponent */}
             <Grid item xs={6.5} p={2} style={{ marginTop: '6%' }}>
               {/* ChemicalComponent Content */}
-              <ChemicalComponent setPhaseFractions = {setPhaseFractions} onAddToComposition={handleChemicalComposition} setChemicalComposition={setChemicalComposition}/>
+              <ChemicalComponent setPhaseFractions={setPhaseFractions} onAddToComposition={handleChemicalComposition} setChemicalComposition={setChemicalComposition}/>
             </Grid>
           </Grid>
           {/* Bottom Section */}
           <Grid item container height="59%">
             {/* Bottom Box Content */}
             <Grid item xs={12} style={{ paddingBottom: '6%' }}>
-              <DarkModeRadarChart chemicalComposition ={chemicalComposition} phaseFractions = {phaseFractions} />
+              <DarkModeRadarChart chemicalComposition={chemicalComposition} phaseFractions={phaseFractions} />
             </Grid>
           </Grid>
         </Grid>
@@ -183,11 +188,10 @@ const MainPage = ({ username }) => {
         {/* Right Section */}
         <Grid item xs={6.5}>
         <Grid container p={2} height="50%"  >
-          <LineChart stateDictionary = {stateDictionary} phaseEnvelope={phaseEnvelope} chemicalComposition ={chemicalComposition}/>
-
+          <LineChart stateDictionary={stateDictionary} phaseEnvelope={phaseEnvelope} chemicalComposition={chemicalComposition}/>
         </Grid>
         <Grid item container height="50%" p={1} >
-          <StateControl setSelectedPT = {setSelectedPT} stateDictionary = {stateDictionary} setStateDictionary = {setStateDictionary}/>
+          <StateControl setSelectedPT={setSelectedPT} stateDictionary={stateDictionary} setStateDictionary={setStateDictionary}/>
         </Grid>
         </Grid>
       </Grid>
@@ -196,4 +200,3 @@ const MainPage = ({ username }) => {
 };
 
 export default MainPage;
-
